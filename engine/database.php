@@ -187,5 +187,4 @@
 
  /*$d = new SQLite3Adapter();
  $d->test();*/
- header("Location: ./../");
 

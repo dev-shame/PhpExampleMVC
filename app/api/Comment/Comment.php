@@ -1,8 +1,11 @@
 <?php
+
 // global declaration
 namespace Comment;
-function getDomain () {
-    return "domain";
+include (__DIR__.'/../../../engine/database.php');
+
+ function getDomain () {
+    return "comment";
 }
 
 class Comment

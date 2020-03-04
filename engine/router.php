@@ -1,9 +1,11 @@
 <?php
 
 namespace Engine;
-
-use Comment\Comment;
+use Comment\Atr;
 use function Comment\getDomain;
+$root = __DIR__."/../app/api";
+include_once($root . "/Comment/Comment.php");
+include_once($root . "/Comment/jobs.php");
 
 class Route {
      public function __construct($httpMethods,$jobs,$path)
@@ -31,13 +33,16 @@ class Route {
     scanInstances();
  };
 
-$root = __DIR__."../app/api";
+
 $uri = $_SERVER['REQUEST_URI'];
 $result = explode("/",$uri);
 $domain = $result[1];
 
+
 switch ($domain) {
-    case getDomain(): require_once($root."/Comment/jobs.php");
+    case getDomain() :
+        Atr::test();
+        break;
 }
 
 

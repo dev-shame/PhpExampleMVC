@@ -17,7 +17,7 @@ Structure of folders
 * /engine/Model.php               - class for implementation of instances, which work in app logic
 ######(where "*" is instance name)
 
-#####example for User instance:
+example for User instance:
 
         /api/User/User.php              - main class
         /api/User/router.json           - routing scheme

@@ -15,7 +15,8 @@ Structure of folders
 * /engine/database.php            - code for interactions with database
 * /engine/router.php              - code for interactions with routing system
 * /engine/Model.php               - class for implementation of instances, which work in app logic
-######(where "*" is instance name)
+
+(where "*" is instance name)
 
 example for User instance:
 

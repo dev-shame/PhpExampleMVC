@@ -146,6 +146,20 @@
          $db = new SQLite3($di->file);
          return $db->query($query);
      }
+     //get by key and value
+     public function findByKey (DatabaseInfo $di,$key,$value) : array {
+         $sqlite3 = new SQLite3Adapter();
+         $query = "SELECT * FROM comment WHERE {$key} = '{$value}'";
+         $result = $sqlite3->query(
+             $di,
+             $query
+         );
+         $data = [];
+         while ($res = $result->fetchArray(SQLITE3_ASSOC)) {
+             array_push($data,$res);
+         }
+         return $data;
+     }
      // TEST
      // test instance of this class
      public function test_openTable() : void {

@@ -1,50 +1,54 @@
 <?php
-
 namespace Engine;
-use Comment\Atr;
-use function Comment\getDomain;
-$root = __DIR__."/../app/api";
-include_once($root . "/Comment/Comment.php");
-include_once($root . "/Comment/jobs.php");
+use Comment\Comment;
 
-class Route {
-     public function __construct($httpMethods,$jobs,$path)
-     {
-         $this->httpMethods = $httpMethods;
-         $this->jobs        = $jobs;
-         $this->path        = $path;
-     }
+include_once    ($_SERVER['DOCUMENT_ROOT']."/app/api/Comment/Comment.php");
+include_once    ($_SERVER['DOCUMENT_ROOT']."/app/api/Comment/jobs.php");
+include_once    ($_SERVER['DOCUMENT_ROOT']."/engine/Log.php");
 
-     public $httpMethods;
-     public $path;
-     public $jobs;
- }
-
- function scanInstances() {
-    $dir = __DIR__."/../app/api/";
-    $result = scandir($dir);
-    $result = array_filter($result,function ($dir){
-        return $dir != "." && $dir != "..";
-    });
-    var_dump($result);
- }
-
- function serve(){
-    scanInstances();
- };
-
-
+//get and split url address
 $uri = $_SERVER['REQUEST_URI'];
-$result = explode("/",$uri);
-$domain = $result[1];
+$uri = explode("/",$uri);
 
+// class name for app/api
+// example:
+// from "localhost:8080/user/example/create" return "user"
+$domain = $uri[1];
+
+// other route
+//example:
+// from "localhost:8080/user/example/create" return ["example","create"]
+$other = $uri;
+array_splice($other, 0, 2);
+$other = array_filter($other,function ($e){
+    return $e !== "";
+}
+);
+
+// other transform as string value
+// example:
+// from ["example","create"] return "/example/create"
+// just for fun :)
+$otherInString = array_reduce($other,function ($accumulator,$elem){
+    return $accumulator."/".$elem;
+});
+$otherInString = preg_replace('/\?.*/','',$otherInString);
+
+//for debug
+Log::console_log($domain);
+Log::console_log($other);
+Log::console_log($otherInString);
+
+$comment = new Comment();
 
 switch ($domain) {
-    case getDomain() :
-        Atr::test();
-        break;
+    case $comment->getClassName() : $comment->listenRoute($otherInString); break;
+    default: echo 'not found';
 }
 
+//$comment = new Comment();
+//$comment->listenRoute("/find");
 
 
-//header("Location: ./../");
+
+

@@ -24,7 +24,7 @@
  interface DatabaseInterface {
      function openTable(DatabaseInfo $di, $instance) : bool;
      function push(DatabaseInfo $di,$instance): void;
-     function query(DatabaseInfo $di, string $query) : void;
+     function query(DatabaseInfo $di, string $query);
  }
  class SQLite3Adapter implements DatabaseInterface {
      // RELEASE
@@ -67,7 +67,7 @@
      }
      // get instance fields [columns,rows]
      protected function getInstanceScheme ($instance) {
-         $data = (array) $instance;
+         $data = get_object_vars($instance);
 
          $columnNames = array_keys($data);
          $columnValues = array_values($data);
@@ -79,7 +79,7 @@
          $scheme = $di->get_scheme();
          if (gettype($scheme)==="NULL") {
 
-         $data = (array) $instance;
+         $data = get_object_vars($instance);
 
          $columnNames = array_keys($data);
          $columnValues = array_values($data);
@@ -123,7 +123,7 @@
          $this->setScheme($di,$instance);
          $sqlFields = $this->schemeToSQLCreate($di);
          $query = "CREATE TABLE $di->table ({$sqlFields})";
-         $result = $db->querySingle($query);
+         $db->querySingle($query);
      }
      // open table return boolean if table already exists
      public function openTable (DatabaseInfo $di, $instance) : bool {
@@ -141,10 +141,10 @@
        $db->query($query);
      }
      //simple query
-     function query(DatabaseInfo $di, string $query): void
+     public function query(DatabaseInfo $di, string $query): \SQLite3Result
      {
          $db = new SQLite3($di->file);
-         $db->query($query);
+         return $db->query($query);
      }
      // TEST
      // test instance of this class

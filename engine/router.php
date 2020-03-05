@@ -1,9 +1,12 @@
 <?php
 namespace Engine;
 use Comment\Comment;
+use Post\Post;
 
 include_once    ($_SERVER['DOCUMENT_ROOT']."/app/api/Comment/Comment.php");
 include_once    ($_SERVER['DOCUMENT_ROOT']."/app/api/Comment/jobs.php");
+include_once    ($_SERVER['DOCUMENT_ROOT']."/app/api/Post/Post.php");
+include_once    ($_SERVER['DOCUMENT_ROOT']."/app/api/Post/jobs.php");
 include_once    ($_SERVER['DOCUMENT_ROOT']."/engine/Log.php");
 
 //get and split url address
@@ -39,10 +42,11 @@ Log::console_log($domain);
 Log::console_log($other);
 Log::console_log($otherInString);
 
-$comment = new Comment();
-
+$comment    = new Comment();
+$post       = new Post();
 switch ($domain) {
     case $comment->getClassName() : $comment->listenRoute($otherInString); break;
+    case $post->getClassName() : $post->listenRoute($otherInString); break;
     default: echo 'not found';
 }
 

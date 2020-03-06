@@ -45,9 +45,10 @@ Log::console_log($otherInString);*/
 $comment    = new Comment();
 $post       = new Post();
 switch ($domain) {
+    case "main":  include_once($_SERVER['DOCUMENT_ROOT']."/app/view/index.html"); break;
     case $comment->getClassName() : $comment->listenRoute($otherInString); break;
     case $post->getClassName() : $post->listenRoute($otherInString); break;
-    default: echo 'not found';
+    default: http_response_code(404);
 }
 
 //$comment = new User();

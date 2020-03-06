@@ -6,22 +6,6 @@ use ReflectionClass;
 class Model {
     private  $routes = [];
     // RELEASE
-    // create Model instance which
-    public function onCreate(){
-        //implement create instance instructions which later save to database
-    }
-    // read Model instance
-    public function onRead(){
-        //implement read instructions
-    }
-    // mutation Model-basis instance
-    public function onUpdate(){
-    // implement update instance instructions which later save to database
-    }
-    // delete Model instance
-    public function onDelete(){
-    // implement delete Model-basis instance from database
-    }
     // get class name as lower case string
     public function getClassName() : string {
         try {

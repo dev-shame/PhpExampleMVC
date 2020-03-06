@@ -38,9 +38,9 @@ $otherInString = array_reduce($other,function ($accumulator,$elem){
 $otherInString = preg_replace('/\?.*/','',$otherInString);
 
 //for debug
-Log::console_log($domain);
+/*Log::console_log($domain);
 Log::console_log($other);
-Log::console_log($otherInString);
+Log::console_log($otherInString);*/
 
 $comment    = new Comment();
 $post       = new Post();
@@ -50,7 +50,7 @@ switch ($domain) {
     default: echo 'not found';
 }
 
-//$comment = new Comment();
+//$comment = new User();
 //$comment->listenRoute("/find");
 
 

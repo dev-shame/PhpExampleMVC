@@ -74,7 +74,7 @@
 
          return [$columnNames,$columnValues];
      }
-     //deserialize object to SQL-like fields and return "filed_name filed_type" and cache it
+     // deserialize object to SQL-like fields and return "filed_name filed_type" and cache it
      protected function setScheme (DatabaseInfo $di,$instance) : array {
          $scheme = $di->get_scheme();
          if (gettype($scheme)==="NULL") {
@@ -95,14 +95,14 @@
          return $result;
          } else{ return $scheme;}
      }
-     //transform scheme to SQL CREATE query for all fields in table
+     // transform scheme to SQL CREATE query for all fields in table
      protected function schemeToSQLCreate (DatabaseInfo $di) : string {
         $scheme = $di->get_scheme();
         if( gettype($scheme) === "NULL") {return "NULL"; };
         $result = $this->parseValues($scheme);
         return $result;
      }
-     //transform instance's scheme to SQL INSERT query
+     // transform instance's scheme to SQL INSERT query
      protected function schemeToSQLInsert ($instance) : array {
          $scheme = $this->getInstanceScheme($instance);
          $result[0] = $this->parseValues($scheme[0]);
@@ -132,7 +132,7 @@
             $this->createTable($di,$instance);
         return $result;
      }
-     //push data to table
+     // push data to table
      public function push(DatabaseInfo $di, $instance): void
      {
        $db = new SQLite3($di->file);
@@ -140,13 +140,13 @@
        $query = "INSERT INTO {$di->table} ({$result[0]}) VALUES ({$result[1]})";
        $db->query($query);
      }
-     //simple query
+     // simple query
      public function query(DatabaseInfo $di, string $query): \SQLite3Result
      {
          $db = new SQLite3($di->file);
          return $db->query($query);
      }
-     //get by key and value
+     // get by key and value
      public function findByKey (DatabaseInfo $di,$key,$value) : array {
          $sqlite3 = new SQLite3Adapter();
          $query = "SELECT * FROM comment WHERE {$key} = '{$value}'";
@@ -159,6 +159,17 @@
              array_push($data,$res);
          }
          return $data;
+     }
+     //update values
+     public function updateValues(DatabaseInfo $di,array $values) {
+         $id = $values['id'];
+         array_walk($values,function ($value,$key) use(&$result){
+            $result .= "{$key} = '{$value}',";
+         });
+         $result = trim($result,",");
+         $query = "UPDATE {$di->table} SET {$result} WHERE id = '{$id}'";
+         $db = new SQLite3($di->file);
+         return $db->query($query);
      }
      // TEST
      // test instance of this class

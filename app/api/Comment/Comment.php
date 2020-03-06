@@ -11,9 +11,10 @@ use Engine\SQLite3Adapter;
 class Comment extends Model {
 
     public $id          = "";
+    public $refPost     = "";
     public $fromUser    = "";
     public $content     = "";
-    public $likes       = 0;
+    public $likes       =  0;
 
     private function getDatabaseInfo() : DatabaseInfo {
         $di = new DatabaseInfo();
@@ -32,25 +33,27 @@ class Comment extends Model {
 
     public function __construct() {}
 
-    public static function new($fromUser,$content,$likes) : Comment
-    {
-        $object = new Comment();
-        $object->fromUser = $fromUser;
-        $object->content = $content;
-        $object->likes = $likes;
-        return $object;
-    }
-
-    public function listenRoute(string $uri) : Comment
+    public function listenRoute(string $uri) : User
     {
         $this->load();
         parent::listenRoute($uri);
         return $this;
     }
 
-    public function create($fromUser,$content,$likes) : Comment
+    public static function new($refPost,$fromUser,$content,$likes) : User
+    {
+        $object             = new User();
+        $object->refPost    = $refPost;
+        $object->fromUser   = $fromUser;
+        $object->content    = $content;
+        $object->likes      = $likes;
+        return $object;
+    }
+
+    function create($refPost,$fromUser,$content,$likes) : User
     {
         $this->id = $this->generateRandomString();
+        $this->refPost      = $refPost;
         $this->fromUser     = $fromUser;
         $this->content      = $content;
         $this->likes        = $likes;
@@ -61,18 +64,27 @@ class Comment extends Model {
         return $this;
     }
 
-    public function findByUser ($user) : array {
+    public function read ($key,$value) : array {
         $sqlite3 = new SQLite3Adapter();
-        $query = "SELECT * FROM comment WHERE fromUser = '{$user}'";
-        $result = $sqlite3->query(
+        return  $sqlite3->findByKey(
             $this->getDatabaseInfo(),
-            $query
-            );
-        $data = [];
-        while ($res = $result->fetchArray(SQLITE3_ASSOC)) {
-            array_push($data,$res);
-        }
-        return $data;
+            $key,$value
+        );
     }
 
+    public function update(...$args){
+        $sqlite3 = new SQLite3Adapter();
+        $sqlite3->updateValues(
+            $this->getDatabaseInfo(),
+            ...$args
+        );
+    }
+
+    public function delete($key,$value) {
+        $sqlite3 = new SQLite3Adapter();
+        return $sqlite3->query(
+            $this->getDatabaseInfo(),
+            "DELETE FROM {$this->getDatabaseInfo()->table} WHERE {$key}='{$value}'"
+        );
+    }
 }

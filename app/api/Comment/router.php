@@ -18,7 +18,21 @@ return [
         ["GET"],
         "",
         [
-            function (){find();}
+            function (){findByUser();}
+        ],
+        ),
+    "/delete" => new Route(
+        ["POST","GET"],
+        "",
+        [
+            function (){delete();}
+        ],
+        ),
+    "/update" => new Route(
+        ["POST"],
+        "",
+        [
+            function (){update();}
         ],
         ),
 ];

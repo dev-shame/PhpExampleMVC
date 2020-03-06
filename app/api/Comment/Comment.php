@@ -33,16 +33,16 @@ class Comment extends Model {
 
     public function __construct() {}
 
-    public function listenRoute(string $uri) : User
+    public function listenRoute(string $uri) : Comment
     {
         $this->load();
         parent::listenRoute($uri);
         return $this;
     }
 
-    public static function new($refPost,$fromUser,$content,$likes) : User
+    public static function new($refPost,$fromUser,$content,$likes) : Comment
     {
-        $object             = new User();
+        $object             = new Comment();
         $object->refPost    = $refPost;
         $object->fromUser   = $fromUser;
         $object->content    = $content;
@@ -50,7 +50,7 @@ class Comment extends Model {
         return $object;
     }
 
-    function create($refPost,$fromUser,$content,$likes) : User
+    function create($refPost,$fromUser,$content,$likes) : Comment
     {
         $this->id = $this->generateRandomString();
         $this->refPost      = $refPost;

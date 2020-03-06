@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<style>
+<?php include 'skeleton.css'; ?>
+</style>
+
+<head>
+    <meta charset="UTF-8">
+    <title >app</title>
+</head>
+<body style="background-color: #D1D1D1">
+<?php include 'header.html'; ?>
+
+<script>
+    window.onload = function (){
+        async function load () {
+            let res = await fetch("/comment/find?user=myUser").then(r=>r.json());
+
+            for (let i in res) {
+                let node = document.createElement("div");
+                node.className              = ".container";
+                node.style.height           = "200px";
+                node.style.marginTop        = "80px";
+                node.style.marginBottom     = "80px";
+                node.style.backgroundColor  = "#e8e8e8";
+                node.style.borderRadius     = "10px";
+                let fromUser    = document.createTextNode(res[i]['fromUser']);
+                let content     = document.createTextNode(res[i]['content']);
+                let likes       = document.createTextNode(res[i]['likes']);
+                let node_text   = document.createElement("strong");
+                node_text.marginTop       = "200px";
+
+
+                node_text.appendChild(fromUser);
+                node.appendChild(node_text);
+                document.getElementById("stream").appendChild(node);
+            }
+
+
+        }
+        load();
+    };
+
+
+
+
+</script>
+<div class="container" style="text-align: center;">
+<div id="stream" class="container">
+</div>
+</div>
+</body>
+</html>

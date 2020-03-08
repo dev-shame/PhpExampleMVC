@@ -160,6 +160,12 @@
          }
          return $data;
      }
+     // get all values from table
+     // (WARNING: NOT GOOD SOLUTION FOR TABLE ROWS WHERE SIZE MORE 100.000)
+     public function findAll (DatabaseInfo $di) : array {
+         $db = new SQLite3($di->file);
+         return $db->querySingle("SELECT * FROM {$di->table}");
+     }
      //update values
      public function updateValues(DatabaseInfo $di,array $values) {
          $id = $values['id'];

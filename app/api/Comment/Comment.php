@@ -7,7 +7,6 @@ use Engine\DatabaseInfo;
 use Engine\Model;
 use Engine\SQLite3Adapter;
 
-//TODO: Describe CRUD - methods for this class
 class Comment extends Model {
 
     public $id          = "";
@@ -40,23 +39,24 @@ class Comment extends Model {
         return $this;
     }
 
-    public static function new($refPost,$fromUser,$content,$likes) : Comment
+    public  function new(...$args) : Comment
     {
-        $object             = new Comment();
-        $object->refPost    = $refPost;
-        $object->fromUser   = $fromUser;
-        $object->content    = $content;
-        $object->likes      = $likes;
-        return $object;
+        $args = $args[0][0];
+        $map    = get_object_vars($this);
+        $result = array_replace($map,$args);
+
+        foreach ($result as $key => $value) {
+            $this->$key = $value;
+        }
+
+        return $this;
     }
 
-    function create($refPost,$fromUser,$content,$likes) : Comment
+    // create
+    function create(...$args) : Comment
     {
-        $this->id = $this->generateRandomString();
-        $this->refPost      = $refPost;
-        $this->fromUser     = $fromUser;
-        $this->content      = $content;
-        $this->likes        = $likes;
+        $this->new($args);
+        $this->id           = $this->generateRandomString();
 
         //for INSERT into database in table getDatabaseInfo()-> table
         $sqlite3 = new SQLite3Adapter();
@@ -64,6 +64,7 @@ class Comment extends Model {
         return $this;
     }
 
+    //read
     public function read ($key,$value) : array {
         $sqlite3 = new SQLite3Adapter();
         return  $sqlite3->findByKey(
@@ -72,6 +73,12 @@ class Comment extends Model {
         );
     }
 
+    public function readAll() : array {
+        $sqlite3 = new SQLite3Adapter();
+        return $sqlite3->findAll($this->getDatabaseInfo());
+    }
+
+    // update
     public function update(...$args){
         $sqlite3 = new SQLite3Adapter();
         $sqlite3->updateValues(
@@ -80,6 +87,7 @@ class Comment extends Model {
         );
     }
 
+    // delete
     public function delete($key,$value) {
         $sqlite3 = new SQLite3Adapter();
         return $sqlite3->query(

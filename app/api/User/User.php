@@ -7,14 +7,15 @@ use Engine\DatabaseInfo;
 use Engine\Model;
 use Engine\SQLite3Adapter;
 
-//TODO: Describe CRUD - methods for this class
+
 class User extends Model {
 
     public $id          = "";
-    public $refPost     = "";
-    public $fromUser    = "";
-    public $content     = "";
-    public $likes       =  0;
+    public $name        = "";
+    public $email       = "";
+    public $hash        = "";
+    public $image       = "";
+    public $posts       = "";
 
     private function getDatabaseInfo() : DatabaseInfo {
         $di = new DatabaseInfo();
@@ -25,7 +26,7 @@ class User extends Model {
 
     private  function load(): void
     {
-        parent::loadRoute(require ($_SERVER['DOCUMENT_ROOT']."/app/api/Comment/router.php") );
+        parent::loadRoute(require ($_SERVER['DOCUMENT_ROOT']."/app/api/User/router.php") );
 
         $sqlite3 = new SQLite3Adapter();
         $sqlite3->openTable($this->getDatabaseInfo(),$this);
@@ -40,23 +41,24 @@ class User extends Model {
         return $this;
     }
 
-    public static function new($refPost,$fromUser,$content,$likes) : User
+    public  function new(...$args) : User
     {
-        $object             = new User();
-        $object->refPost    = $refPost;
-        $object->fromUser   = $fromUser;
-        $object->content    = $content;
-        $object->likes      = $likes;
-        return $object;
+        $args = $args[0][0];
+        $map    = get_object_vars($this);
+        $result = array_replace($map,$args);
+
+        foreach ($result as $key => $value) {
+            $this->$key = $value;
+        }
+
+        return $this;
     }
 
-    function create($refPost,$fromUser,$content,$likes) : User
+    // create
+    function create(...$args) : User
     {
-        $this->id = $this->generateRandomString();
-        $this->refPost      = $refPost;
-        $this->fromUser     = $fromUser;
-        $this->content      = $content;
-        $this->likes        = $likes;
+        $this->new($args);
+        $this->id           = $this->generateRandomString();
 
         //for INSERT into database in table getDatabaseInfo()-> table
         $sqlite3 = new SQLite3Adapter();
@@ -64,6 +66,7 @@ class User extends Model {
         return $this;
     }
 
+    // read
     public function read ($key,$value) : array {
         $sqlite3 = new SQLite3Adapter();
         return  $sqlite3->findByKey(
@@ -72,6 +75,7 @@ class User extends Model {
         );
     }
 
+    // update
     public function update(...$args){
         $sqlite3 = new SQLite3Adapter();
         $sqlite3->updateValues(
@@ -80,6 +84,7 @@ class User extends Model {
         );
     }
 
+    // delete
     public function delete($key,$value) {
         $sqlite3 = new SQLite3Adapter();
         return $sqlite3->query(

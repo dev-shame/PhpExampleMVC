@@ -4,19 +4,15 @@ namespace User;
 
 include_once    ($_SERVER['DOCUMENT_ROOT']."/app/api/User/User.php");
 // GET
-// post, user, content, likes
-function create() : bool{
-    $req = $_GET;
-    if ($req['user'] === NULL) {http_response_code(400); return false;}
-    $comment = new User();
-    $comment->create(
-        $req['post'],
-        $req['user'],
-        $req['content'],
-        $req['likes']
-    );
+// any
+function create() : bool {
+   $req = (array)$_GET;
+
+   $user = new User();
+   $user->create($req);
+
     http_response_code(200);
-    return true;
+   return true;
 }
 // GET
 // user

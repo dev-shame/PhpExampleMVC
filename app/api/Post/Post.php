@@ -7,7 +7,6 @@ use Engine\DatabaseInfo;
 use Engine\Model;
 use Engine\SQLite3Adapter;
 
-//TODO: Describe CRUD - methods for this class
 class Post extends Model {
 
     public $id          = "";
@@ -40,23 +39,26 @@ class Post extends Model {
         return $this;
     }
 
-    public static function new($header,$fromUser,$content,$likes) : Post
+    public  function new(...$args) : Post
     {
-        $object             = new Post();
-        $object->header    = $header;
-        $object->fromUser   = $fromUser;
-        $object->content    = $content;
-        $object->likes      = $likes;
-        return $object;
+        $args = $args[0][0];
+        $map    = get_object_vars($this);
+        $result = array_replace($map,$args);
+
+        var_dump($result);
+
+        foreach ($result as $key => $value) {
+            $this->$key = $value;
+        }
+
+        return $this;
     }
 
-    function create($header,$fromUser,$content,$likes) : Post
+    // create
+    function create(...$args) : Post
     {
-        $this->id = $this->generateRandomString();
-        $this->header      = $header;
-        $this->fromUser     = $fromUser;
-        $this->content      = $content;
-        $this->likes        = $likes;
+        $this->new($args);
+        $this->id           = $this->generateRandomString();
 
         //for INSERT into database in table getDatabaseInfo()-> table
         $sqlite3 = new SQLite3Adapter();
@@ -64,6 +66,7 @@ class Post extends Model {
         return $this;
     }
 
+    // read
     public function read ($key,$value) : array {
         $sqlite3 = new SQLite3Adapter();
         return  $sqlite3->findByKey(
@@ -72,6 +75,11 @@ class Post extends Model {
         );
     }
 
+    public function readAll() : array {
+        return [];
+    }
+
+    // update
     public function update(...$args){
         $sqlite3 = new SQLite3Adapter();
         $sqlite3->updateValues(
@@ -80,6 +88,7 @@ class Post extends Model {
         );
     }
 
+    //delete
     public function delete($key,$value) {
         $sqlite3 = new SQLite3Adapter();
         return $sqlite3->query(

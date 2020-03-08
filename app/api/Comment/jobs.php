@@ -4,17 +4,12 @@ namespace Comment;
 
 include_once    ($_SERVER['DOCUMENT_ROOT']."/app/api/Comment/Comment.php");
 // GET
-// post, user, content, likes
+// any
 function create() : bool{
     $req = $_GET;
-    if ($req['user'] === NULL) {http_response_code(400); return false;}
+    if ($req['fromUser'] === NULL) {http_response_code(400); return false;}
     $comment = new Comment();
-    $comment->create(
-        $req['post'],
-        $req['user'],
-        $req['content'],
-        $req['likes']
-    );
+    $comment->create($req);
     http_response_code(200);
     return true;
 }

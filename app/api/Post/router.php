@@ -21,6 +21,20 @@ return [
             function (){findByUser();}
         ],
         ),
+    "/findAll" => new Route(
+        ["GET"],
+        "",
+        [
+            function (){findByUser();}
+        ],
+        ),
+    "/post" => new Route(
+        ["GET"],
+        "",
+        [
+            function (){findByPost();}
+        ],
+        ),
     "/delete" => new Route(
         ["POST","GET"],
         "",

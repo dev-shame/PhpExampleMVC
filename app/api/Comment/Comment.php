@@ -41,21 +41,20 @@ class Comment extends Model {
 
     public  function new(...$args) : Comment
     {
-        $args = $args[0][0];
+        $args = $args[0];
         $map    = get_object_vars($this);
         $result = array_replace($map,$args);
 
         foreach ($result as $key => $value) {
             $this->$key = $value;
         }
-
         return $this;
     }
 
     // create
-    function create(...$args) : Comment
+    function create() : Comment
     {
-        $this->new($args);
+       // $this->new($args);
         $this->id           = $this->generateRandomString();
 
         //for INSERT into database in table getDatabaseInfo()-> table

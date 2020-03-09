@@ -9,7 +9,8 @@ function create() : bool {
     $req = $_GET;
     if ($req['fromUser'] === NULL) {http_response_code(400); return false;}
     $comment = new Post();
-    $comment->create($req);
+    $comment->new($req);
+    $comment->create();
     http_response_code(200);
     return true;
 }
@@ -19,6 +20,25 @@ function findByUser(){
     $req = $_GET;
     $comment = new Post();
     $data = $comment->read('fromUser',$req['user']);
+    $json = json_encode($data);
+    echo $json;
+    http_response_code(200);
+}
+// GET
+// refPost
+function findAll(){
+    $comment = new Post();
+    $data = $comment->readAll();
+    $json = json_encode($data);
+    echo $json;
+    http_response_code(200);
+}
+// GET
+// refPost
+function findByPost(){
+    $req = $_GET;
+    $comment = new Post();
+    $data = $comment->read('refPost',$req['refPost']);
     $json = json_encode($data);
     echo $json;
     http_response_code(200);

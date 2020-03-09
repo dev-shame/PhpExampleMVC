@@ -45,8 +45,6 @@ class Post extends Model {
         $map    = get_object_vars($this);
         $result = array_replace($map,$args);
 
-        var_dump($result);
-
         foreach ($result as $key => $value) {
             $this->$key = $value;
         }
@@ -55,9 +53,8 @@ class Post extends Model {
     }
 
     // create
-    function create(...$args) : Post
+    function create() : Post
     {
-        $this->new($args);
         $this->id           = $this->generateRandomString();
 
         //for INSERT into database in table getDatabaseInfo()-> table
@@ -76,7 +73,8 @@ class Post extends Model {
     }
 
     public function readAll() : array {
-        return [];
+        $sqlite3 = new SQLite3Adapter();
+        return $sqlite3->findAll($this->getDatabaseInfo());
     }
 
     // update

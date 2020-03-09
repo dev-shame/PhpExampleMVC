@@ -5,13 +5,14 @@ namespace Comment;
 include_once    ($_SERVER['DOCUMENT_ROOT']."/app/api/Comment/Comment.php");
 // GET
 // any
-function create() : bool{
+function create() : ?Comment{
     $req = $_GET;
-    if ($req['fromUser'] === NULL) {http_response_code(400); return false;}
+
     $comment = new Comment();
-    $comment->create($req);
-    http_response_code(200);
-    return true;
+    $comment->new($req);
+
+    $comment->create();
+        return $comment;
 }
 // GET
 // user
@@ -27,10 +28,9 @@ function findByUser(){
 // id
 function delete() : bool {
     empty($_GET)? $req = $_POST : $req = $_GET;
-    if ($req['id'] === NULL) {http_response_code(400); return false;}
+    if (!$req['id']) {http_response_code(400); return false;};
     $comment = new Comment();
     $comment->delete("id",$req['id']);
-    http_response_code(200);
     return true;
 }
 // POST

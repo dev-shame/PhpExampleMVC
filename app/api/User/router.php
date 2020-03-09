@@ -73,12 +73,38 @@ return [
         }
         ],
         ),
-    "/login" => new Route(
+    "/check" => new Route(
         ["POST"],
         "",
         [
             function (){
-                checkUser();
+               if (checkUser()) {
+                   http_response_code(200);
+                   echo 'oky';
+               } else {
+                   http_response_code(400);
+                   echo 'Err';
+               }
+            }
+        ],
+        ),
+    "/login" => new Route(
+        ["POST"],
+        "",
+        [
+            function() : bool {
+               $user = login();
+               if ($user === NULL) {
+                   echo 'Err';
+                   http_response_code(400);
+                   return false;
+               } else {
+                   cookCookie("name",$user['name']);
+                   cookCookie("email",$user['email']);
+                   cookCookie("hash",$user['hash']);
+                   echo 'ok';
+                   return true;
+               }
             }
         ],
         ),

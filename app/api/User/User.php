@@ -7,6 +7,11 @@ use Engine\DatabaseInfo;
 use Engine\Model;
 use Engine\SQLite3Adapter;
 
+abstract class Permission {
+    const Root      = 0;
+    const Member    = 1;
+    const Guest     = 2;
+}
 
 class User extends Model {
 
@@ -16,6 +21,7 @@ class User extends Model {
     public $hash        = "";
     public $image       = "";
     public $posts       = "";
+    public $perm        = Permission::Guest;
 
     private function getDatabaseInfo() : DatabaseInfo {
         $di = new DatabaseInfo();
@@ -29,7 +35,10 @@ class User extends Model {
         parent::loadRoute(require ($_SERVER['DOCUMENT_ROOT']."/app/api/User/router.php") );
 
         $sqlite3 = new SQLite3Adapter();
-        $sqlite3->openTable($this->getDatabaseInfo(),$this);
+       if ( !$sqlite3->checkTable($this->getDatabaseInfo()) ) {
+           $query = "CREATE TABLE {$this->getDatabaseInfo()->table} (id TEXT,name TEXT, email TEXT UNIQUE, hash TEXT, image TEXT, posts TEXT, perm INTEGER)";
+           $sqlite3->query($this->getDatabaseInfo(), $query);
+       }
     }
 
     public function __construct() {}
@@ -43,7 +52,7 @@ class User extends Model {
 
     public  function new(...$args) : User
     {
-        $args = $args[0][0];
+        $args = $args[0];
         $map    = get_object_vars($this);
         $result = array_replace($map,$args);
 
@@ -55,9 +64,8 @@ class User extends Model {
     }
 
     // create
-    function create(...$args) : User
+    function create() : User
     {
-        $this->new($args);
         $this->id           = $this->generateRandomString();
 
         //for INSERT into database in table getDatabaseInfo()-> table
@@ -76,9 +84,9 @@ class User extends Model {
     }
 
     // update
-    public function update(...$args){
+    public function update(...$args) : void{
         $sqlite3 = new SQLite3Adapter();
-        $sqlite3->updateValues(
+        $result = $sqlite3->updateValues(
             $this->getDatabaseInfo(),
             ...$args
         );

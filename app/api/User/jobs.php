@@ -63,9 +63,13 @@ function checkUser() : bool {
 }
 // POST
 // email hash
-function login() : bool {
+function login()  {
     $req =$_POST;
     $user = new User();
     $user = $user->read("email",$req["email"])[0];
-    return matchHash($user['hash'],$req['hash']);
+    if (matchHash($user['hash'],$req['hash']) ) {
+        return $user;
+    } else {
+        return NULL;
+    }
 }

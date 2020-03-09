@@ -49,7 +49,8 @@ $comment    = new Comment();
 $post       = new Post();
 $user       = new User();
 switch ($domain) {
-    case "main":  include_once($_SERVER['DOCUMENT_ROOT']."/app/view/index.php"); break;
+    case "main":   include_once($_SERVER['DOCUMENT_ROOT']."/app/view/index.php"); break;
+    case "admin":  include_once($_SERVER['DOCUMENT_ROOT'] . "/app/view/admin_page/admin.php"); break;
     case $comment->getClassName() : $comment->listenRoute($otherInString); break;
     case $post->getClassName() :    $post->listenRoute($otherInString); break;
     case $user->getClassName() :    $user->listenRoute($otherInString); break;

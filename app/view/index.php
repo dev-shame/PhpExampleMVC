@@ -3,6 +3,7 @@ $uri = $_SERVER['REQUEST_URI'];
 $uri = explode("/",$uri);
 $domain = $uri[2];
 $_login = false;
+$_root_login = true;
 if ($domain == "login"){
     $_login = true;
     $domain ="home";
@@ -17,7 +18,7 @@ if($domain == "exit"){
 <!DOCTYPE html>
 <html lang="en">
 <style>
-    <?php include 'skeleton.css'; ?>
+    <?php include 'component/style/skeleton.css'; ?>
 </style>
 
 <head>
@@ -36,8 +37,14 @@ if($domain == "exit"){
         <?php
         if($_login == true)
         {
+
             echo "<h5 style=\"margin-right: 10px;\">login</h5>
             <a class=\"button\" style=\"width: auto; border: none;\" href=\"exit\">Выйти</a>";
+            if($_root_login == true)
+            {
+                echo "
+            <a class=\"button\" style=\"width: auto; border: none;\" href=\"../admin/home\">Панель администратора</a>";
+            }
         }
         else
             {
@@ -54,22 +61,22 @@ if($domain == "exit"){
             //DYMANIC DIV
             //Отображает элементы, в зависимости от url
             if($domain == 'home'){
-                include 'header.html';
+                include 'component/header.html';
             }
             if($domain == "reg"){
-                include 'reg.php';
+                include 'component/reg.php';
             }
             if($domain == "new_articles"){
-                include 'add.html';
+                include 'component/add.html';
             }
             if($domain == "login"){
-                include 'enter.php';
+                include 'component/enter.php';
             }
             ?>
         </div>
         <div style=" right:0;  width: 30%; height: 50%;">
             <h5 style="text-align: center">Меню</h5>
-                    <a class="button" style="width: 100%;" href="home">Главная</a>
+            <a class="button" style="width: 100%;" href="home">Главная</a>
 
             <?php //user authorize?
             //if true, user get more function
@@ -115,21 +122,9 @@ if($domain == "exit"){
         }
         load();
     };
-    function home() {
-        <? $domain = "home"?>
-    }
-    function reg() {
-        <? $domain = "reg"?>
-    }
-
 
 
 </script>
-<div class="container" style="text-align: center;">
 
-    <div id="stream" class="container">
-
-    </div>
-</div>
 </body>
 </html>

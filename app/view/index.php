@@ -2,12 +2,13 @@
 $uri = $_SERVER['REQUEST_URI'];
 $uri = explode("/",$uri);
 $domain = $uri[2];
-$this_login = false;
+$_login = false;
 if ($domain == "login"){
-    $this_login = true;
+    $_login = true;
+    $domain ="home";
 }
 if($domain == "exit"){
-    $this_login = false;
+    $_login = false;
     $domain ="home";
 }
 ?>
@@ -29,11 +30,11 @@ if($domain == "exit"){
     background-color: #e8e8e8;
     border-radius: 10px;
 " >
-    <h2 style="margin-left: 10px">Блог</h2>
+    <h2 style="margin-left: 10px">Мой Блог</h2>
     <hr style="width: 90%; margin: 0 auto;">
     <div style="text-align: right;  width: auto;">
         <?php
-        if($this_login == true)
+        if($_login == true)
         {
             echo "<h5 style=\"margin-right: 10px;\">login</h5>
             <a class=\"button\" style=\"width: auto; border: none;\" href=\"exit\">Выйти</a>";
@@ -56,10 +57,13 @@ if($domain == "exit"){
                 include 'header.html';
             }
             if($domain == "reg"){
-                include 'reg.html';
+                include 'reg.php';
             }
             if($domain == "new_articles"){
                 include 'add.html';
+            }
+            if($domain == "login"){
+                include 'enter.php';
             }
             ?>
         </div>
@@ -69,11 +73,10 @@ if($domain == "exit"){
 
             <?php //user authorize?
             //if true, user get more function
-            if($this_login == true){
+            if($_login == true){
                 echo
                 "
                 <a class=\"button\" style=\"width: 100%;\" href=\"new_articles\">Новая статья</a>
-                <a class=\"button\" style=\"width: 100%;\" href=\"articles\">Статьи</a>
                 <a class=\"button\" style=\"width: 100%;\" href=\"articles\">Статьи</a>
                 ";
             }

@@ -3,43 +3,69 @@
 namespace User;
 
 include_once    ($_SERVER['DOCUMENT_ROOT']."/app/api/User/User.php");
+include_once    ($_SERVER['DOCUMENT_ROOT']."/app/api/User/policy.php");
+
+function cookCookie($k,$v) {
+    setcookie($k, $v, time() + (86400 * 30) );
+}
+////////////////
 // GET
 // any
-function create() : bool {
-   $req = (array)$_GET;
+function create() : ?User {
+   $req = $_GET;
 
    $user = new User();
-   $user->create($req);
+   $user->new($req);
 
-    http_response_code(200);
-   return true;
+   if (
+   isUsefulForCreate($user) &&
+   isEmail($user->email)
+   ) { $user->create();
+       return $user; }
+
+   return NULL;
 }
 // GET
-// user
-function findByUser(){
+// email
+function findByEmail() : ?array {
     $req = $_GET;
-    $comment = new User();
-    $data = $comment->read('fromUser',$req['user']);
-    $json = json_encode($data);
-    echo $json;
-    http_response_code(200);
+    $user = new User();
+    $data = $user->read('email',$req['email']);
+    if (empty($data)) {$data = NULL;};
+    return $data;
 }
 // GET / POST
-// id
-function delete() : bool {
+// email
+function deleteByEmail() : bool {
     empty($_GET)? $req = $_POST : $req = $_GET;
-    if ($req['id'] === NULL) {http_response_code(400); return false;}
     $comment = new User();
-    $comment->delete("id",$req['id']);
-    http_response_code(200);
+    $comment->delete("email",$req['email']);
     return true;
 }
 // POST
 // any
 function update() : bool {
-    $req = $_POST;
-    $comment = new User();
-    $comment->update($req);
-    http_response_code(200);
+    $req = $_GET;
+   // if (true === true) {
+        $user = new User();
+        $user->update($req);
+   // }
+   // return NULL;
     return true;
+}
+// POST
+// name hash
+function checkUser() : bool {
+    $req =$_POST;
+    $user = new User();
+    $user = $user->read("name",$req["name"])[0];
+    return matchHash($user['hash'],$req['hash']);
+}
+// POST
+// email hash
+function login() : bool {
+    $req =$_POST;
+    $user = new User();
+    $user = $user->read("email",$req["email"])[0];
+    return matchHash($user['hash'],$req['hash']);
 }

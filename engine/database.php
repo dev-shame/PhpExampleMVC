@@ -110,7 +110,7 @@
          return $result;
      }
      // check table
-     protected function checkTable(DatabaseInfo $di) : bool {
+     public function checkTable(DatabaseInfo $di) : bool {
          $db = new SQLite3($di->file);
          $query = "SELECT name FROM sqlite_master WHERE type='table' AND name='{$di->table}'";
          $result = $db->querySingle($query);
@@ -141,7 +141,7 @@
        $db->query($query);
      }
      // simple query
-     public function query(DatabaseInfo $di, string $query): \SQLite3Result
+     public function query(DatabaseInfo $di, string $query)
      {
          $db = new SQLite3($di->file);
          return $db->query($query);
@@ -149,7 +149,7 @@
      // get by key and value
      public function findByKey (DatabaseInfo $di,$key,$value) : array {
          $sqlite3 = new SQLite3Adapter();
-         $query = "SELECT * FROM comment WHERE {$key} = '{$value}'";
+         $query = "SELECT * FROM {$di->table} WHERE {$key} = '{$value}'";
          $result = $sqlite3->query(
              $di,
              $query
@@ -168,13 +168,13 @@
      }
      //update values
      public function updateValues(DatabaseInfo $di,array $values) {
+         $db = new SQLite3($di->file);
          $id = $values['id'];
          array_walk($values,function ($value,$key) use(&$result){
             $result .= "{$key} = '{$value}',";
          });
          $result = trim($result,",");
          $query = "UPDATE {$di->table} SET {$result} WHERE id = '{$id}'";
-         $db = new SQLite3($di->file);
          return $db->query($query);
      }
      // TEST

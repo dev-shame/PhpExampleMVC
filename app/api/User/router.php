@@ -45,6 +45,23 @@ return [
         }
         ],
         ),
+    "/findByName" => new Route(
+        ["GET"],
+        "",
+        [
+            function () : bool {
+                $users =  findByName()[0];
+                if ($users === NULL) {
+                    echo 'Not Found';
+                    http_response_code(400);
+                    return false;
+                }
+                $json = json_encode($users); echo $json;
+                http_response_code(200);
+                return true;
+            }
+        ],
+        ),
     "/delete" => new Route(
         ["POST","GET"],
         "",
@@ -80,7 +97,7 @@ return [
             function (){
                if (checkUser()) {
                    http_response_code(200);
-                   echo 'oky';
+                   echo 'ok';
                } else {
                    http_response_code(400);
                    echo 'Err';
@@ -89,7 +106,7 @@ return [
         ],
         ),
     "/login" => new Route(
-        ["POST"],
+        ["GET"],
         "",
         [
             function() : bool {
@@ -102,7 +119,8 @@ return [
                    cookCookie("name",$user['name']);
                    cookCookie("email",$user['email']);
                    cookCookie("hash",$user['hash']);
-                   echo 'ok';
+                   echo json_encode($user);
+                   http_response_code(200);
                    return true;
                }
             }

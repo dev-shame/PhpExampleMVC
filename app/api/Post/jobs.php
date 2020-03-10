@@ -5,43 +5,27 @@ namespace Post;
 include_once    ($_SERVER['DOCUMENT_ROOT']."/app/api/Post/Post.php");
 // GET
 // any
-function create() : bool {
+function create() : ?Post {
     $req = $_GET;
-    if ($req['fromUser'] === NULL) {http_response_code(400); return false;}
-    $comment = new Post();
-    $comment->new($req);
-    $comment->create();
-    http_response_code(200);
-    return true;
+    if ($req['fromUser'] === NULL) {http_response_code(400); return NULL;}
+    $post = new Post();
+    $post->new($req);
+    $post->create();
+    return $post;
 }
 // GET
 // user
 function findByUser(){
     $req = $_GET;
     $comment = new Post();
-    $data = $comment->read('fromUser',$req['user']);
-    $json = json_encode($data);
-    echo $json;
-    http_response_code(200);
+    $data = $comment->read('fromUser',$req['fromUser']);
+    return $data;
 }
 // GET
-// refPost
 function findAll(){
     $comment = new Post();
     $data = $comment->readAll();
-    $json = json_encode($data);
-    echo $json;
-    http_response_code(200);
-}
-// GET
-// refPost
-function findByPost(){
-    $req = $_GET;
-    $comment = new Post();
-    $data = $comment->read('refPost',$req['refPost']);
-    $json = json_encode($data);
-    echo $json;
-    http_response_code(200);
+    return $data;
 }
 // GET / POST
 // id

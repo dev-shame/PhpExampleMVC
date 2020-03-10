@@ -34,6 +34,15 @@ function findByEmail() : ?array {
     if (empty($data)) {$data = NULL;};
     return $data;
 }
+// GET
+// name
+function findByName() : ?array {
+    $req = $_GET;
+    $user = new User();
+    $data = $user->read('name',$req['name']);
+    if (empty($data)) {$data = NULL;};
+    return $data;
+}
 // GET / POST
 // email
 function deleteByEmail() : bool {
@@ -64,7 +73,7 @@ function checkUser() : bool {
 // POST
 // email hash
 function login()  {
-    $req =$_POST;
+    $req =$_GET;
     $user = new User();
     $user = $user->read("email",$req["email"])[0];
     if (matchHash($user['hash'],$req['hash']) ) {

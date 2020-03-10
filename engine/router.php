@@ -3,7 +3,7 @@ namespace Engine;
 use Comment\Comment;
 use Post\Post;
 use User\User;
-
+header("Access-Control-Allow-Origin: *");
 include_once    ($_SERVER['DOCUMENT_ROOT']."/app/api/Comment/Comment.php");
 include_once    ($_SERVER['DOCUMENT_ROOT']."/app/api/Comment/jobs.php");
 include_once    ($_SERVER['DOCUMENT_ROOT']."/app/api/Post/Post.php");

@@ -162,9 +162,15 @@
      }
      // get all values from table
      // (WARNING: NOT GOOD SOLUTION FOR TABLE ROWS WHERE SIZE MORE 100.000)
-     public function findAll (DatabaseInfo $di) : array {
+     public function findAll (DatabaseInfo $di)  {
          $db = new SQLite3($di->file);
-         return $db->querySingle("SELECT * FROM {$di->table}");
+         $query = "SELECT * FROM {$di->table}";
+         $result =  $db->query($query);
+         $data = [];
+         while ($res = $result->fetchArray(SQLITE3_ASSOC)) {
+             array_push($data,$res);
+         }
+         return $data;
      }
      //update values
      public function updateValues(DatabaseInfo $di,array $values) {

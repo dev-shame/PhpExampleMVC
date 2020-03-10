@@ -41,7 +41,7 @@ class Post extends Model {
 
     public  function new(...$args) : Post
     {
-        $args = $args[0][0];
+        $args = $args[0];
         $map    = get_object_vars($this);
         $result = array_replace($map,$args);
 
@@ -72,9 +72,10 @@ class Post extends Model {
         );
     }
 
-    public function readAll() : array {
+    public function readAll()  {
         $sqlite3 = new SQLite3Adapter();
-        return $sqlite3->findAll($this->getDatabaseInfo());
+        $result = $sqlite3->findAll($this->getDatabaseInfo());
+        return $result;
     }
 
     // update

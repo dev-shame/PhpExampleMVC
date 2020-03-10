@@ -11,21 +11,34 @@ return [
         ["GET"],
         "",
         [
-            function (){create();},
+            function (){
+            $post = create();
+            $json = json_encode($post);
+            echo $json;
+            },
         ],
         ),
     "/find" => new Route(
         ["GET"],
         "",
         [
-            function (){findByUser();}
+            function (){
+            $posts = findByUser();
+                $json = json_encode($posts);
+                echo $json;
+                http_response_code(200);
+        }
         ],
         ),
     "/findAll" => new Route(
         ["GET"],
         "",
         [
-            function (){findByUser();}
+            function (){
+            $posts= findAll();
+            $json = json_encode($posts);
+            echo $json;
+        }
         ],
         ),
     "/post" => new Route(
